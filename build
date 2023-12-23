@@ -1,0 +1,16 @@
+#!/usr/bin/env dt
+
+args deq [script-name build-args]:
+script-name "/" split last \script-name:
+
+[ [ "USAGE: " script-name " ...TARGETS\n"
+    "A small dt script to builds tvm\n"
+    "TARGETS:\n"
+    "  build   build tvm\n"
+  ] [do eprint] each
+] build-args len not do?
+
+
+[ "go build -v -x -o tvm src/main.go" exec pls ] \build def
+
+build-args \eval each
