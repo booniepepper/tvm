@@ -1,16 +1,17 @@
-#!/usr/bin/env dt
+#!/bin/sh
 
-args deq [script-name build-args]:
-script-name "/" split last \script-name:
+if [ "$*" = "" ]; then
+  >&2 echo "USAGE: $(basename "$0") ...TARGETS"
+  >&2 echo "A small dt script to builds tvm"
+  >&2 echo "TARGETS:"
+  >&2 echo "  build   build tvm"
+fi
 
-[ [ "USAGE: " script-name " ...TARGETS\n"
-    "A small dt script to builds tvm\n"
-    "TARGETS:\n"
-    "  build   build tvm\n"
-  ] [do eprint] each
-] build-args len not do?
-
-
-[ "go build -v -x -o tvm src/main.go" exec pls ] \build def
-
-build-args \eval each
+while [ "$*" != "" ]; do
+  if [ "$1" = "build" ]; then
+    go build -v -x -o tvm src/main.go
+  else
+    >&2 echo "I don't know how to \"$1\""
+  fi
+  shift
+done
